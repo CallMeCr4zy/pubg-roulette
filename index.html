@@ -6,7 +6,8 @@
   <style>
     body {
       font-family: monospace;
-      background: #1a1a1a;
+      background: url('https://i.imgur.com/8XyxewB.jpg') no-repeat center center fixed;
+      background-size: cover;
       color: #f0c040;
       display: flex;
       flex-direction: column;
@@ -18,7 +19,7 @@
       margin-bottom: 20px;
     }
     select, .categories label {
-      background: #333;
+      background: rgba(0,0,0,0.6);
       color: #f0c040;
       border: 2px solid #f0c040;
       border-radius: 4px;
@@ -41,7 +42,9 @@
       font-size: 1.2em;
       white-space: pre-line;
       text-align: left;
-      color: #fff;
+      background: rgba(0,0,0,0.6);
+      padding: 10px;
+      border-radius: 4px;
     }
   </style>
 </head>
@@ -76,7 +79,11 @@
     const medicalOptions = ["Only boosters","Only bandages","Only first aids","Only medkits","Only painkillers","Only energy drinks","No healing","Free choice"];
     const vehicleOptions = ["Always on foot","Only boat","Only bicycle","Only buggy","Only motorcycle","Only Dacia","Only UAZ","Only coupe","Free choice"];
     const specialOptions = ["No HUD","No jumping","No crouching","Only crouching","Loot only with F","No prone","Go prone immediately if you hear a sniper shot","Free choice"];
-    function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function randomFrom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
     function generateDropzone(map) {
       if (["Sanhok", "Karakin", "Paramo"].includes(map)) {
         return "Free choice";
@@ -84,30 +91,32 @@
         return `${randomFrom(gridsTop)}-${randomFrom(gridsSide)}`;
       }
     }
+
     function generateStrategy() {
       const map = document.getElementById("mapSelect").value;
       let output = `Map: ${map}`;
+
       if (document.getElementById("cat-dropzone").checked) {
-        output += `\nDropzone: ${generateDropzone(map)}`;
+        output += `\\nDropzone: ${generateDropzone(map)}`;
       }
       if (document.getElementById("cat-looting").checked) {
-        output += `\nLooting: ${randomFrom(lootingOptions)}`;
+        output += `\\nLooting: ${randomFrom(lootingOptions)}`;
       }
       if (document.getElementById("cat-weapons").checked) {
-        output += `\nWeapon Combo: ${randomFrom(weaponCombos)}`;
+        output += `\\nWeapon Combo: ${randomFrom(weaponCombos)}`;
       }
       if (document.getElementById("cat-medical").checked) {
-        output += `\nMedical: ${randomFrom(medicalOptions)}`;
+        output += `\\nMedical: ${randomFrom(medicalOptions)}`;
       }
       if (document.getElementById("cat-vehicle").checked) {
-        output += `\nVehicle: ${randomFrom(vehicleOptions)}`;
+        output += `\\nVehicle: ${randomFrom(vehicleOptions)}`;
       }
       if (document.getElementById("cat-special").checked) {
         const chance = Math.random();
         if (chance < 0.75) {
-          output += `\nSpecial: Free choice`;
+          output += `\\nSpecial: Free choice`;
         } else {
-          output += `\nSpecial: ${randomFrom(specialOptions.filter(opt => opt !== "Free choice"))}`;
+          output += `\\nSpecial: ${randomFrom(specialOptions.filter(opt => opt !== \"Free choice\"))}`;
         }
       }
       document.getElementById("output").innerText = output;
