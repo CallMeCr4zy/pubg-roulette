@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PUBG Roulette</title>
+  <style>
+    body {
+      font-family: monospace;
+      background: #1a1a1a;
+      color: #f0c040;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+    select, .categories label {
+      background: #333;
+      color: #f0c040;
+      border: 2px solid #f0c040;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    #getStrategy {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      background: #ff9800;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 20px;
+      font-size: 1.2em;
+      white-space: pre-line;
+      text-align: left;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>PUBG Roulette</h1>
+  <select id="mapSelect">
+    <option value="Erangel">Erangel 8x8</option>
+    <option value="Miramar">Miramar 8x8</option>
+    <option value="Taego">Taego 8x8</option>
+    <option value="Vikendi">Vikendi 8x8</option>
+    <option value="Rondo">Rondo 8x8</option>
+    <option value="Deston">Deston 8x8</option>
+    <option value="Sanhok">Sanhok 4x4</option>
+    <option value="Paramo">Paramo 3x3</option>
+    <option value="Karakin">Karakin 2x2</option>
+  </select>
+  <div class="categories">
+    <label><input type="checkbox" id="cat-dropzone" checked>Dropzone</label>
+    <label><input type="checkbox" id="cat-looting" checked>Looting</label>
+    <label><input type="checkbox" id="cat-weapons" checked>Weapon Combo</label>
+    <label><input type="checkbox" id="cat-medical" checked>Medical</label>
+    <label><input type="checkbox" id="cat-vehicle" checked>Vehicle</label>
+    <label><input type="checkbox" id="cat-special" checked>Special</label>
+  </div>
+  <button id="getStrategy" onclick="generateStrategy()">Get Strategy</button>
+  <div id="output"></div>
+  <script>
+    const gridsTop = ["A","B","C","D","E","F","G","H"];
+    const gridsSide = ["I","J","K","L","M","N","O","P"];
+    const lootingOptions = ["Single-story buildings", "Two-story buildings", "Warehouses", "Corpses (only loot ammo from 2 weapons before)", "Outside the zone", "Inside the zone", "In your dropzone", "Outside your dropzone", "City", "Outside the city", "Free choice", "On an island (Miramar east islands only)"];
+    const weaponCombos = ["AR & AR","AR & MP","AR & DMR","AR & SR","AR & Shotgun","AR & Pistol","AR & LMG","MP & MP","MP & DMR","MP & SR","MP & Shotgun","MP & Pistol","MP & LMG","DMR & DMR","DMR & SR","DMR & Shotgun","SR & SR","SR & Shotgun","LMG & Shotgun","Pistol & Shotgun","Free choice"];
+    const medicalOptions = ["Only boosters","Only bandages","Only first aids","Only medkits","Only painkillers","Only energy drinks","No healing","Free choice"];
+    const vehicleOptions = ["Always on foot","Only boat","Only bicycle","Only buggy","Only motorcycle","Only Dacia","Only UAZ","Only coupe","Free choice"];
+    const specialOptions = ["No HUD","No jumping","No crouching","Only crouching","Loot only with F","No prone","Go prone immediately if you hear a sniper shot","Free choice"];
+    function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function generateDropzone(map) {
+      if (["Sanhok", "Karakin", "Paramo"].includes(map)) {
+        return "Free choice";
+      } else {
+        return `${randomFrom(gridsTop)}-${randomFrom(gridsSide)}`;
+      }
+    }
+    function generateStrategy() {
+      const map = document.getElementById("mapSelect").value;
+      let output = `Map: ${map}`;
+      if (document.getElementById("cat-dropzone").checked) {
+        output += `\nDropzone: ${generateDropzone(map)}`;
+      }
+      if (document.getElementById("cat-looting").checked) {
+        output += `\nLooting: ${randomFrom(lootingOptions)}`;
+      }
+      if (document.getElementById("cat-weapons").checked) {
+        output += `\nWeapon Combo: ${randomFrom(weaponCombos)}`;
+      }
+      if (document.getElementById("cat-medical").checked) {
+        output += `\nMedical: ${randomFrom(medicalOptions)}`;
+      }
+      if (document.getElementById("cat-vehicle").checked) {
+        output += `\nVehicle: ${randomFrom(vehicleOptions)}`;
+      }
+      if (document.getElementById("cat-special").checked) {
+        const chance = Math.random();
+        if (chance < 0.75) {
+          output += `\nSpecial: Free choice`;
+        } else {
+          output += `\nSpecial: ${randomFrom(specialOptions.filter(opt => opt !== "Free choice"))}`;
+        }
+      }
+      document.getElementById("output").innerText = output;
+    }
+  </script>
+</body>
+</html>
